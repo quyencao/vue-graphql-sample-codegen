@@ -1,28 +1,57 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="container">
+    <h1>Vue Graphql Apollo Sample</h1>
+    <div class="flex-row">
+      <div class="flex-large">
+        <template v-if="isEditing">
+          <h2>Edit user</h2>
+          <UpdateUser :currentUser="currentUser" :cancelEditing="cancelEditing" />
+        </template>
+        <template v-else>
+          <h2>Add User</h2>
+          <CreateUser />
+        </template>
+      </div>
+      <div class="flex-large">
+        <h2>View users</h2>
+        <GetUsers :changeCurrentUser="changeCurrentUser" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import GetUsers from "./graphql/queries/GetUsers.vue";
+import CreateUser from "./graphql/mutations/CreateUser.vue";
+import UpdateUser from "./graphql/mutations/UpdateUser.vue";
 
 export default {
-  name: 'app',
+  name: "app",
+  data: function() {
+    return {
+      currentUser: {
+        id: null,
+        username: "",
+        email: ""
+      },
+      isEditing: false
+    };
+  },
   components: {
-    HelloWorld
+    GetUsers,
+    CreateUser,
+    UpdateUser
+  },
+  methods: {
+    changeCurrentUser(user) {
+      this.isEditing = true;
+      this.currentUser = user;
+    },
+    cancelEditing() {
+      this.isEditing = false;
+    }
   }
-}
+};
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+<style></style>
